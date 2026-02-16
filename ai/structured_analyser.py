@@ -25,15 +25,15 @@ def analyze_call_structured(call_state:dict) -> AIAnalysisResponse:
     return JSON strictly in this format:
     
     {{
-        "sentiment": "Positive | Neutral | Frustrated | Angry",
-        "sentiment_confidence": 0-1 float,
-        "sip_root_cause": "short explanation",
-        "sip_owner": "Agent | Customer | Network | PBX | Unknown",
-        "qos_quality": "High | Medium | Low",
-        "qos_risk_level": "Low | Medium | High",
-        "business_impact": "short explanation",
-        "recommended_action": "clear operational recommendation",
-        "overall_risk_score": 0-1 float
+        "sentiment": one of ["Positive", "Neutral", "Frustrated", "Angry"],
+        "sentiment_confidence": float between 0 and 1,
+        "sip_root_cause": short technical explanation,
+        "sip_owner": one of ["Agent", "Customer", "Network", "PBX", "Unknown"],
+        "qos_quality": one of ["High", "Medium", "Low"],
+        "qos_risk_level": one of ["Low", "Medium", "High"],
+        "business_impact": short explanation,
+        "recommended_action": clear operational recommendation,
+        "overall_risk_score": float between 0 and 1
     }}
     
     DO NOT include any explanation outside JSON
