@@ -1,0 +1,33 @@
+from fastapi import FastAPI
+from ingestion.webhook_handler import router
+from storage.database import Base, engine
+
+# 🔥 IMPORTANT: import models so metadata registers them
+from storage import event_repository 
+
+from processing.call_state_builder import build_call_state 
+from ai.orchestrator import run_ai_analysis
+
+app = FastAPI(title= "AI Contact Center Assistant")
+
+@app.on_event("startup")
+def startup():
+    Base.metadata.create_all(bind=engine)
+
+app.include_router(router)
+
+@app.get("/")
+def health_check():
+    return {"Status" : "Running"}
+
+@app.get("/call-state/{call_id}")
+def get_call_state(call_id: str):
+    return build_call_state(call_id)
+
+@app.get("/ai-analysis/{call_id}")
+def analyze_call(call_id: str):
+    
+    call_state = build_call_state(call_id).dict()
+    results = run_ai_analysis(call_state)
+    
+    return results
