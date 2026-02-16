@@ -6,7 +6,7 @@ class AIAnalysisResponse(BaseModel):
     sentiment_confidence: float = Field(ge=0, le=1)
     
     sip_root_cause: str
-    sip_owner: Literal["Agent", "Customer", "Netwoek", "PBX", "Unknown"]
+    sip_owner: Literal["Agent", "Customer", "Network", "PBX", "Unknown"]
     
     qos_quality: Literal["High", "Medium", "Low"]
     qos_risk_level: Literal["Low", "Medium", "High"]

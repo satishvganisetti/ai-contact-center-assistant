@@ -2,11 +2,12 @@ from fastapi import FastAPI
 from ingestion.webhook_handler import router
 from storage.database import Base, engine
 
-# 🔥 IMPORTANT: import models so metadata registers them
+# IMPORTANT: import models so metadata registers them
 from storage import event_repository 
 
 from processing.call_state_builder import build_call_state 
 from ai.structured_analyser import analyze_call_structured
+from ai.risk_engine import apply_risk_rules
 
 app = FastAPI(title= "AI Contact Center Assistant")
 
@@ -28,6 +29,7 @@ def get_call_state(call_id: str):
 def analyze_call(call_id: str):
     
     call_state = build_call_state(call_id).dict()
-    result = analyze_call_structured(call_state)
+    ai_result = analyze_call_structured(call_state)
+    final_result = apply_risk_rules(ai_result)
     
-    return result
+    return final_result
