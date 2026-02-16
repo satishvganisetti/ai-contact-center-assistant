@@ -5,9 +5,19 @@ from schemas.ai_response import AIAnalysisResponse
 def analyze_call_structured(call_state:dict) -> AIAnalysisResponse:
     
     prompt = f"""
-    You are an AI contact center diagnostic system.PermissionError
+    You are an AI contact center diagnostic system.
     
-    Analyse the following call data and return ONLY valid JSON.
+    You must analyse THREE independent domains:
+    
+    1. CUSTOEMR SENTIMENT (use transcript only)
+    2. SIP DIAGNOSTICS (use sip_status and disconnect_reason only)
+    3. MEDIA QUALITY (use packet_loss, jitter, mos_score only)
+    
+    IMPORTANT RULES:
+    - Do NOT mix transcript data into SIP analysis.
+    - Do Not mix business context into SIP root cause.
+    - SIP root cause must strictly reflect SIP signalling behavior.
+    - if SIP data is insufficient, set sip_owner to "Unknown"
     
     CALL DATA:
     {json.dumps(call_state, indent=2)}
