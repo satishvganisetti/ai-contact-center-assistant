@@ -1,8 +1,12 @@
 import json
+import time
 from ai.llm_client import call_llm
 from schemas.ai_response import AIAnalysisResponse
+from ai.observability import log_ai_invocation
 
 def analyze_call_structured(call_state:dict) -> AIAnalysisResponse:
+    
+    start_time = time.time()
     
     prompt = f"""
     You are an AI contact center diagnostic system.
@@ -40,9 +44,11 @@ def analyze_call_structured(call_state:dict) -> AIAnalysisResponse:
     """
     
     raw_response = call_llm(prompt)
+    latency_ms = (time.time() - start_time) * 1000
     
     try:
         parsed = json.loads(raw_response)
-        return AIAnalysisResponse(**parsed)
+        return AIAnalysisResponse(**parsed), raw_response, prompt, latency_ms
+    
     except Exception as e:
         raise ValueError(f"Invalid AI JSON response: {e} \n Raw Output: {raw_response}")
