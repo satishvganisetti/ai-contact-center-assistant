@@ -6,7 +6,7 @@ from storage.database import Base, engine
 from storage import event_repository 
 
 from processing.call_state_builder import build_call_state 
-from ai.orchestrator import run_ai_analysis
+from ai.structured_analyser import analyze_call_structured
 
 app = FastAPI(title= "AI Contact Center Assistant")
 
@@ -28,6 +28,6 @@ def get_call_state(call_id: str):
 def analyze_call(call_id: str):
     
     call_state = build_call_state(call_id).dict()
-    results = run_ai_analysis(call_state)
+    result = analyze_call_structured(call_state)
     
-    return results
+    return result
